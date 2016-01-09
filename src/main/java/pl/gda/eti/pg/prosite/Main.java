@@ -1,5 +1,7 @@
 package pl.gda.eti.pg.prosite;
 
+import pl.gda.eti.pg.prosite.state.State;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
