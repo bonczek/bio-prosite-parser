@@ -1,6 +1,6 @@
 package pl.gda.eti.pg.prosite;
 
-import pl.gda.eti.pg.prosite.state.Rule;
+import pl.gda.eti.pg.prosite.rule.Rule;
 
 /**
  * Iterator, który zaczynając od określonego miejsca w łańcuchu znaków sprawdza zgodność kolejnych znaków ze schematem.

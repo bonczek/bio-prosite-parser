@@ -1,6 +1,6 @@
 package pl.gda.eti.pg.prosite;
 
-import pl.gda.eti.pg.prosite.state.Rule;
+import pl.gda.eti.pg.prosite.rule.Rule;
 
 import java.util.ArrayList;
 import java.util.Iterator;

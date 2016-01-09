@@ -1,12 +1,12 @@
 package pl.gda.eti.pg.prosite;
 
-import pl.gda.eti.pg.prosite.state.AnythingRule;
-import pl.gda.eti.pg.prosite.state.ExactlyKTimesRule;
-import pl.gda.eti.pg.prosite.state.FinalRule;
-import pl.gda.eti.pg.prosite.state.NoneOfRule;
-import pl.gda.eti.pg.prosite.state.OneOfRule;
-import pl.gda.eti.pg.prosite.state.Rule;
-import pl.gda.eti.pg.prosite.state.SingleCharacterRule;
+import pl.gda.eti.pg.prosite.rule.AnythingRule;
+import pl.gda.eti.pg.prosite.rule.ExactlyKTimesRule;
+import pl.gda.eti.pg.prosite.rule.FinalRule;
+import pl.gda.eti.pg.prosite.rule.NoneOfRule;
+import pl.gda.eti.pg.prosite.rule.OneOfRule;
+import pl.gda.eti.pg.prosite.rule.Rule;
+import pl.gda.eti.pg.prosite.rule.SingleCharacterRule;
 
 import java.util.Arrays;
 import java.util.List;

@@ -2,7 +2,7 @@ package pl.gda.eti.pg.prosite;
 
 import org.hamcrest.Matcher;
 import org.testng.annotations.Test;
-import pl.gda.eti.pg.prosite.state.Rule;
+import pl.gda.eti.pg.prosite.rule.Rule;
 
 import java.util.Arrays;
 import java.util.List;

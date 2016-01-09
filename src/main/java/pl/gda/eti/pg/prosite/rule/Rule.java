@@ -1,4 +1,4 @@
-package pl.gda.eti.pg.prosite.state;
+package pl.gda.eti.pg.prosite.rule;
 
 public abstract class Rule {
 
