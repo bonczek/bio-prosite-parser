@@ -17,7 +17,7 @@ public class PatternParserTest {
     private PatternParser patternParser = new PatternParser();
 
     @Test
-    public void testParse() throws Exception {
+    public void testParseOneOfRule() throws Exception {
         String pattern = "[ABC]-[DEF]-[GHI]";
         Rule res = patternParser.parse(pattern);
 
@@ -34,7 +34,7 @@ public class PatternParserTest {
     }
 
     @Test
-    public void testParseWithNoneOf() throws Exception {
+    public void testParseNoneOf() throws Exception {
         String pattern = "{ABC}-{DEF}";
         Rule res = patternParser.parse(pattern);
 
@@ -52,7 +52,7 @@ public class PatternParserTest {
     }
 
     @Test
-    public void testParseAnythingState() throws Exception {
+    public void testParseAnything() throws Exception {
         String pattern = "x-x";
         Rule res = patternParser.parse(pattern);
 
