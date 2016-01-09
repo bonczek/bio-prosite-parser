@@ -5,7 +5,7 @@ import pl.gda.eti.pg.prosite.rule.Rule;
 /**
  * Iterator, który zaczynając od określonego miejsca w łańcuchu znaków sprawdza zgodność kolejnych znaków ze schematem.
  */
-public class PrositeIterator {
+public class PatternIterator {
 
     private final int index;
     private Rule rule;
@@ -17,18 +17,10 @@ public class PrositeIterator {
      * @param index indeks znaku w szukanym ciagu od ktorego iterator zacznie sprawdzac reguły
      * @param rule szukane reguły, które sprawdzane są w kolejnych literach
      */
-    public PrositeIterator(int index, Rule rule) {
+    public PatternIterator(int index, Rule rule) {
         this.index = index;
         this.rule = rule;
         this.matched = new StringBuilder();
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public Rule getRule() {
-        return rule;
     }
 
     /**
@@ -48,7 +40,11 @@ public class PrositeIterator {
         }
     }
 
-    public String getMatched() {
-        return matched.toString();
+    public boolean finished() {
+        return rule.isFinal();
+    }
+
+    public String finishedReport() {
+        return String.format("Znaleziony wzorzec: %s indeks: (%d,%d)", matched.toString(), index, index + matched.length());
     }
 }
