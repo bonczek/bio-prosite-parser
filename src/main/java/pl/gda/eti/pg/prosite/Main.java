@@ -1,6 +1,6 @@
 package pl.gda.eti.pg.prosite;
 
-import pl.gda.eti.pg.prosite.state.State;
+import pl.gda.eti.pg.prosite.state.Rule;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,7 +13,7 @@ public class Main {
         String pattern = "[ABC]-[DEF]-[GHI]";
         PatternParser patternParser = new PatternParser();
 
-        State patternStates = patternParser.parse(pattern);
+        Rule patternStates = patternParser.parse(pattern);
 
         String exampleString = "DSAADOADI";
 
@@ -30,7 +30,7 @@ public class Main {
                 if (!prositeSeq.patternMatched(exampleString.charAt(i))) {
                     it.remove();
                 } else {
-                    if (prositeSeq.getState().isFinal()) {
+                    if (prositeSeq.getRule().isFinal()) {
                         System.out.println(String.format("Znaleziony wzorzec: %s indeks: %d", prositeSeq.getMatched(), prositeSeq.getIndex()));
                     }
                 }

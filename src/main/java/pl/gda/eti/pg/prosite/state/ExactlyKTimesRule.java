@@ -1,22 +1,22 @@
 package pl.gda.eti.pg.prosite.state;
 
-public class ExactlyKTimesState extends SingleCharacterState {
+public class ExactlyKTimesRule extends SingleCharacterRule {
 
     private int counter;
 
-    public ExactlyKTimesState(Character character, State nextState, int repeatNumer) {
-        super(character, nextState);
+    public ExactlyKTimesRule(Character character, Rule nextRule, int repeatNumer) {
+        super(character, nextRule);
         this.counter = repeatNumer;
     }
 
     @Override
-    public State next(char c) {
+    public Rule next(char c) {
         if (Character.compare(c, character) == 0) {
             counter--;
             if (counter > 0) {
                 return this;
             } else {
-                return nextState;
+                return nextRule;
             }
         }
         return null;

@@ -1,17 +1,17 @@
 package pl.gda.eti.pg.prosite.state;
 
-public abstract class State {
+public abstract class Rule {
 
     private boolean isFinal = false;
 
-    public State() {
+    public Rule() {
     }
 
-    public State(boolean isFinal) {
+    public Rule(boolean isFinal) {
         this.isFinal = isFinal;
     }
 
-    public abstract State next(char c);
+    public abstract Rule next(char c);
 
     public boolean isFinal() {
         return isFinal;

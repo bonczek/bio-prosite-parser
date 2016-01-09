@@ -3,22 +3,22 @@ package pl.gda.eti.pg.prosite.state;
 import java.util.HashSet;
 import java.util.Set;
 
-public class NoneOfState extends State {
+public class NoneOfRule extends Rule {
 
-    private final State nextState;
+    private final Rule nextRule;
     private Set<Character> excludedCharactersSet = new HashSet<>();
 
-    public NoneOfState(char[] excludedCharacters, State nextState) {
-        this.nextState = nextState;
+    public NoneOfRule(char[] excludedCharacters, Rule nextRule) {
+        this.nextRule = nextRule;
         for (char c : excludedCharacters) {
             excludedCharactersSet.add(c);
         }
     }
 
     @Override
-    public State next(char c) {
+    public Rule next(char c) {
         if (!excludedCharactersSet.contains(c)) {
-            return nextState;
+            return nextRule;
         } else {
             return null;
         }

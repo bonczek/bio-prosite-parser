@@ -1,66 +1,66 @@
 package pl.gda.eti.pg.prosite;
 
-import pl.gda.eti.pg.prosite.state.AnythingState;
-import pl.gda.eti.pg.prosite.state.ExactlyKTimesState;
-import pl.gda.eti.pg.prosite.state.FinalState;
-import pl.gda.eti.pg.prosite.state.NoneOfState;
-import pl.gda.eti.pg.prosite.state.OneOfState;
-import pl.gda.eti.pg.prosite.state.SingleCharacterState;
-import pl.gda.eti.pg.prosite.state.State;
+import pl.gda.eti.pg.prosite.state.AnythingRule;
+import pl.gda.eti.pg.prosite.state.ExactlyKTimesRule;
+import pl.gda.eti.pg.prosite.state.FinalRule;
+import pl.gda.eti.pg.prosite.state.NoneOfRule;
+import pl.gda.eti.pg.prosite.state.OneOfRule;
+import pl.gda.eti.pg.prosite.state.Rule;
+import pl.gda.eti.pg.prosite.state.SingleCharacterRule;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class PatternParser {
 
-    public State parse(String pattern) {
+    public Rule parse(String pattern) {
         List<String> rules = Arrays.asList(pattern.split("-"));
 
-        State nextState = new FinalState();
-        State currentState = null;
+        Rule nextRule = new FinalRule();
+        Rule currentRule = null;
         for (int i = rules.size() - 1; i >= 0; i--) {
             String rule = rules.get(i);
-            currentState = decodeRule(rule, nextState);
-            nextState = currentState;
+            currentRule = decodeRule(rule, nextRule);
+            nextRule = currentRule;
         }
-        return currentState;
+        return currentRule;
     }
 
-    private State decodeRule(String rule, State nextState) {
+    private Rule decodeRule(String rule, Rule nextRule) {
         if (rule.charAt(0) == '[' && rule.charAt(rule.length() - 1) == ']') {
-            return createOneOfGivenLettersRule(rule, nextState);
+            return createOneOfGivenLettersRule(rule, nextRule);
         } else if (rule.charAt(0) == '{' && rule.charAt(rule.length() - 1) == '}') {
-            return createNoneFromGivenLettersRule(rule, nextState);
+            return createNoneFromGivenLettersRule(rule, nextRule);
         } else if (rule.equals("x")) {
-            return new AnythingState(nextState);
+            return new AnythingRule(nextRule);
         } else if (rule.length() == 1) {
-            return new SingleCharacterState(rule.charAt(0), nextState);
+            return new SingleCharacterRule(rule.charAt(0), nextRule);
         } else if (rule.charAt(1) == '(' && rule.charAt(rule.length() - 1) == ')') {
             if (rule.contains(",")) {
 
             } else {
-                return createExactlyKTimesState(rule, nextState);
+                return createExactlyKTimesState(rule, nextRule);
             }
         }
         //@todo reszta regul
         return null;
     }
 
-    private State createOneOfGivenLettersRule(String ruleString, State nextState) {
+    private Rule createOneOfGivenLettersRule(String ruleString, Rule nextRule) {
         String letters = ruleString.substring(1, ruleString.length() - 1);
-        return new OneOfState(letters.toCharArray(), nextState);
+        return new OneOfRule(letters.toCharArray(), nextRule);
     }
 
-    private State createNoneFromGivenLettersRule(String ruleString, State nextState) {
+    private Rule createNoneFromGivenLettersRule(String ruleString, Rule nextRule) {
         String letters = ruleString.substring(1, ruleString.length() - 1);
-        return new NoneOfState(letters.toCharArray(), nextState);
+        return new NoneOfRule(letters.toCharArray(), nextRule);
     }
 
-    private State createExactlyKTimesState(String ruleString, State nextState) {
+    private Rule createExactlyKTimesState(String ruleString, Rule nextRule) {
         char character = ruleString.charAt(0);
         String stringNumber = ruleString.substring(2, ruleString.length() - 1);
         Integer repeatNumber = Integer.parseInt(stringNumber);
-        return new ExactlyKTimesState(character, nextState, repeatNumber);
+        return new ExactlyKTimesRule(character, nextRule, repeatNumber);
     }
 
 }

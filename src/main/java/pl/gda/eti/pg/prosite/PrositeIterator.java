@@ -1,6 +1,6 @@
 package pl.gda.eti.pg.prosite;
 
-import pl.gda.eti.pg.prosite.state.State;
+import pl.gda.eti.pg.prosite.state.Rule;
 
 /**
  * Iterator, który zaczynając od określonego miejsca w łańcuchu znaków sprawdza zgodność kolejnych znaków ze schematem.
@@ -8,18 +8,18 @@ import pl.gda.eti.pg.prosite.state.State;
 public class PrositeIterator {
 
     private final int index;
-    private State state;
+    private Rule rule;
     private StringBuilder matched;
 
     /**
      * Stworzenie nowego iteratora, ktory od okreslonego miejsca rozpocznie sprawdzanie schematu.
      *
      * @param index indeks znaku w szukanym ciagu od ktorego iterator zacznie sprawdzac reguły
-     * @param state szukane reguły, które sprawdzane są w kolejnych literach
+     * @param rule szukane reguły, które sprawdzane są w kolejnych literach
      */
-    public PrositeIterator(int index, State state) {
+    public PrositeIterator(int index, Rule rule) {
         this.index = index;
-        this.state = state;
+        this.rule = rule;
         this.matched = new StringBuilder();
     }
 
@@ -27,8 +27,8 @@ public class PrositeIterator {
         return index;
     }
 
-    public State getState() {
-        return state;
+    public Rule getRule() {
+        return rule;
     }
 
     /**
@@ -38,9 +38,9 @@ public class PrositeIterator {
      * @return rezulat dopasowania danego znaku
      */
     public boolean patternMatched(Character character) {
-        State tmp = state.next(character);
+        Rule tmp = rule.next(character);
         if (tmp != null) {
-            this.state = tmp;
+            this.rule = tmp;
             matched.append(character);
             return true;
         } else {

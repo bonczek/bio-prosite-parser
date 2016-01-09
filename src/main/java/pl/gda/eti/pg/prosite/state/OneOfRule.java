@@ -3,18 +3,18 @@ package pl.gda.eti.pg.prosite.state;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OneOfState extends State {
+public class OneOfRule extends Rule {
 
-    private Map<Character, State> transitions = new HashMap<>();
+    private Map<Character, Rule> transitions = new HashMap<>();
 
-    public OneOfState(char[] chars, State st) {
+    public OneOfRule(char[] chars, Rule st) {
         for (char c : chars) {
             transitions.put(c, st);
         }
     }
 
     @Override
-    public State next(char ch) {
+    public Rule next(char ch) {
         return transitions.get(ch);
     }
 
