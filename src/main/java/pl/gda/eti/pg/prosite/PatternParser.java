@@ -1,6 +1,7 @@
 package pl.gda.eti.pg.prosite;
 
 import pl.gda.eti.pg.prosite.rule.AnythingRule;
+import pl.gda.eti.pg.prosite.rule.BetweenKAndJRule;
 import pl.gda.eti.pg.prosite.rule.ExactlyKTimesRule;
 import pl.gda.eti.pg.prosite.rule.FinalRule;
 import pl.gda.eti.pg.prosite.rule.NoneOfRule;
@@ -42,15 +43,14 @@ public class PatternParser {
         } else if (rule.length() == 1) {
             return new SingleCharacterRule(rule.charAt(0), nextRule);
         } else if (rule.charAt(1) == '(' && rule.charAt(rule.length() - 1) == ')') {
-            if (rule.contains(",")) {
-                //@todo wystąpenia litery między i<A<j
-            } else {
-                try {
+            try {
+                if (rule.contains(",")) {
+                    return createBetweenKAndJRule(rule, nextRule);
+                } else {
                     return createExactlyKTimesState(rule, nextRule);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Failed to create rule, because cannot parse number of repeat time.", e);
                 }
-
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Failed to create rule, because cannot parse number of repeat time.", e);
             }
         }
         throw new IllegalArgumentException(String.format(
@@ -72,6 +72,15 @@ public class PatternParser {
         String stringNumber = ruleString.substring(2, ruleString.length() - 1);
         Integer repeatNumber = Integer.parseInt(stringNumber);
         return new ExactlyKTimesRule(character, nextRule, repeatNumber);
+    }
+
+    private Rule createBetweenKAndJRule(String ruleString, Rule nextRule) throws NumberFormatException {
+        char character = ruleString.charAt(0);
+        String intervalNumbers = ruleString.substring(2, ruleString.length() - 1);
+        String[] intervals = intervalNumbers.split(",");
+        int minRepeatNumber = Integer.parseInt(intervals[0]);
+        int maxRepeatNumber = Integer.parseInt(intervals[1]);
+        return new BetweenKAndJRule(character, nextRule, minRepeatNumber, maxRepeatNumber);
     }
 
 }

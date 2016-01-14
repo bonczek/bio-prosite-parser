@@ -1,5 +1,6 @@
 package pl.gda.eti.pg.prosite;
 
+import pl.gda.eti.pg.prosite.rule.BetweenKAndJRule;
 import pl.gda.eti.pg.prosite.rule.Rule;
 
 /**
@@ -9,8 +10,8 @@ public class PatternIterator {
 
     private final int index;
     private Rule rule;
+    private Rule secondRule;
     private StringBuilder matched;
-
     /**
      * Stworzenie nowego iteratora, ktory od okreslonego miejsca rozpocznie sprawdzanie schematu.
      *
@@ -23,6 +24,16 @@ public class PatternIterator {
         this.matched = new StringBuilder();
     }
 
+    public PatternIterator(PatternIterator iterator) {
+        this.index = iterator.index;
+        this.rule = iterator.rule;
+        this.matched = new StringBuilder(iterator.matched);
+    }
+
+    public Rule getSecondRule() {
+        return secondRule;
+    }
+
     /**
      * Sprawdza czy dla podanego kolejnego znaku określony schemat jest prawdziwy.
      *
@@ -30,10 +41,17 @@ public class PatternIterator {
      * @return rezulat dopasowania danego znaku
      */
     public boolean patternMatched(Character character) {
-        Rule tmp = rule.next(character);
-        if (tmp != null) {
-            this.rule = tmp;
+        secondRule = null;
+        Rule nextRule = rule.next(character);
+        if (nextRule != null) {
+            this.rule = nextRule;
             matched.append(character);
+            if (nextRule instanceof BetweenKAndJRule) {
+                BetweenKAndJRule optionalRule = (BetweenKAndJRule) nextRule;
+                if (optionalRule.getRuleAfter() != null) {
+                    secondRule = optionalRule.getRuleAfter();
+                }
+            }
             return true;
         } else {
             return false;
@@ -45,6 +63,6 @@ public class PatternIterator {
     }
 
     public String finishedReport() {
-        return String.format("Znaleziony wzorzec: %s indeks: (%d,%d)", matched.toString(), index, index + matched.length());
+        return String.format("Znaleziony wzorzec: %s indeks: (%d,%d)\n", matched.toString(), index, index + matched.length());
     }
 }

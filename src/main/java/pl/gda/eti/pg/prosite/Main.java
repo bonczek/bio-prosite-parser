@@ -11,17 +11,21 @@ public class Main {
     public static void main(String[] args) {
 
         String pattern = "[RK]-G-{EDRKHPCG}-[AGSCI]-[FY]-[LIVA]-x-[FYM]";
+        String noisyPattern = "e(2,5)-e(2,4)-e";
         PatternParser patternParser = new PatternParser();
 
-        Rule rulesChain = patternParser.parse(pattern);
+        Rule rulesChain = patternParser.parse(noisyPattern);
 
         String lectureString1 = "SRSLKMRGQAFVIFKEVSSAT";
         String lectureString2 = "KLTGRPRGVAFVRYNKREEAQ";
         String lectureString3 = "VGCSVHKGFAFVQYVNERNAR";
 
-        matchSingleSequence(lectureString1, rulesChain);
-        matchSingleSequence(lectureString2, rulesChain);
-        matchSingleSequence(lectureString3, rulesChain);
+        String noisyString = "eeeeeeeeeeeeeee";
+
+        matchSingleSequence(noisyString, rulesChain);
+//        matchSingleSequence(lectureString1, rulesChain);
+//        matchSingleSequence(lectureString2, rulesChain);
+//        matchSingleSequence(lectureString3, rulesChain);
     }
 
     /**
@@ -36,7 +40,7 @@ public class Main {
         List<PatternIterator> patternIterators = new ArrayList<>();
         for (int i = 0; i < sequence.length(); i++) {
             patternIterators.add(new PatternIterator(i, rulesChain));
-            checkIteratorsAtPosition(sequence.charAt(i), patternIterators.iterator());
+            checkIteratorsAtPosition(sequence.charAt(i), patternIterators);
         }
     }
 
@@ -49,16 +53,25 @@ public class Main {
      * @param seqCharacter kolejny znak przetwarzanej sekwencji
      * @param it           iterator do kolekcji przejść wzorców.
      */
-    private static void checkIteratorsAtPosition(char seqCharacter, Iterator<PatternIterator> it) {
+    private static void checkIteratorsAtPosition(char seqCharacter, List<PatternIterator> patternIterators) {
+        Iterator<PatternIterator> it = patternIterators.iterator();
+        List<PatternIterator> toAdd = new ArrayList<>();
         while (it.hasNext()) {
             PatternIterator patternIterator = it.next();
             if (!patternIterator.patternMatched(seqCharacter)) {
                 it.remove();
             } else {
+                if (patternIterator.getSecondRule() != null) {
+                    toAdd.add(new PatternIterator(patternIterator));
+                }
                 if (patternIterator.finished()) {
                     System.out.println(patternIterator.finishedReport());
                 }
             }
         }
+        if (!toAdd.isEmpty()) {
+            toAdd.forEach(patternIterators::add);
+        }
+
     }
 }

@@ -2,7 +2,9 @@ package pl.gda.eti.pg.prosite;
 
 import org.hamcrest.Matcher;
 import org.testng.annotations.Test;
+import pl.gda.eti.pg.prosite.rule.BetweenKAndJRule;
 import pl.gda.eti.pg.prosite.rule.Rule;
+import pl.gda.eti.pg.prosite.rule.SingleCharacterRule;
 
 import java.util.Arrays;
 import java.util.List;
@@ -93,6 +95,20 @@ public class PatternParserTest {
         assertThat(s3.next('Z'), nullValue());
         Rule s5 = s4.next('B');
         assertThat(s5.isFinal(), is(true));
+    }
+
+    @Test
+    public void testBetweenKAndJ() throws Exception {
+        String pattern = "e(2,3)-e";
+        Rule rule = patternParser.parse(pattern);
+
+        BetweenKAndJRule r1 = (BetweenKAndJRule) rule.next('e');
+        assertThat(r1.getRuleAfter(), nullValue());
+        BetweenKAndJRule r2 = (BetweenKAndJRule) r1.next('e');
+        assertThat(r2.getRuleAfter(), notNullValue());
+        assertThat(r2.getRuleAfter() instanceof SingleCharacterRule, is(true));
+        Rule r3 = r2.next('e');
+        assertThat(r3 instanceof SingleCharacterRule, is(true));
     }
 
     private void assertNextValues(Rule rule, List<Character> chars, Matcher<Object> matcher) {
