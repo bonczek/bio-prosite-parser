@@ -1,4 +1,4 @@
-package pl.gda.eti.pg.prosite;
+package pl.gda.eti.pg.prosite.pattern;
 
 import pl.gda.eti.pg.prosite.rule.BetweenKAndJRule;
 import pl.gda.eti.pg.prosite.rule.Rule;
@@ -10,8 +10,12 @@ public class PatternIterator {
 
     private final int index;
     private Rule rule;
+    /**
+     * Druga reguła w szczególnym przypadku rozgałęziania reguł.
+     */
     private Rule secondRule;
     private StringBuilder matched;
+
     /**
      * Stworzenie nowego iteratora, ktory od okreslonego miejsca rozpocznie sprawdzanie schematu.
      *
@@ -24,6 +28,9 @@ public class PatternIterator {
         this.matched = new StringBuilder();
     }
 
+    /**
+     * Konstruktor do kopiowania iteratora w szczególnym przypadku rozgałęziania reguł.
+     */
     public PatternIterator(PatternIterator iterator, Rule nextRule) {
         this.index = iterator.index;
         this.matched = new StringBuilder(iterator.matched);
@@ -48,6 +55,7 @@ public class PatternIterator {
             matched.append(character);
             if (nextRule instanceof BetweenKAndJRule) {
                 BetweenKAndJRule optionalRule = (BetweenKAndJRule) nextRule;
+                //szczególny przypadek rozgałęzienia reguł
                 if (optionalRule.getRuleAfter() != null) {
                     secondRule = optionalRule.getRuleAfter();
                 }
@@ -62,8 +70,7 @@ public class PatternIterator {
         return rule.isFinal();
     }
 
-    public SequenceFound getSequenceFound() {
-        //@todo co jesli nie skonczy?
-        return new SequenceFound(index, index + matched.length(), matched.toString());
+    public PatternFound getSequenceFound() {
+        return new PatternFound(index, index + matched.length(), matched.toString());
     }
 }

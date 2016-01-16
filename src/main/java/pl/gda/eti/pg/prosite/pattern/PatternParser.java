@@ -1,4 +1,4 @@
-package pl.gda.eti.pg.prosite;
+package pl.gda.eti.pg.prosite.pattern;
 
 import pl.gda.eti.pg.prosite.rule.AnythingRule;
 import pl.gda.eti.pg.prosite.rule.BetweenKAndJRule;
@@ -29,6 +29,7 @@ public class PatternParser {
         Rule currentRule = null;
         List<Rule> ruleList = new ArrayList<>();
         ruleList.add(nextRule);
+        //reguły są tworzone od końca ponieważ muszą pamiętać regułę następną po niej
         for (int i = rules.size() - 1; i >= 0; i--) {
             String rule = rules.get(i);
             currentRule = decodeRule(rule, nextRule, i);

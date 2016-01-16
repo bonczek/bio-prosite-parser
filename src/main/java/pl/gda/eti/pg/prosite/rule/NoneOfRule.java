@@ -21,6 +21,9 @@ public class NoneOfRule extends Rule {
         }
     }
 
+    /**
+     * Konstruktor slużący do kopiowania reguł
+     */
     public NoneOfRule(NoneOfRule rule, Rule nextRule) {
         super(rule.index);
         this.nextRule = nextRule;

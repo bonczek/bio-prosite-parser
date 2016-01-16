@@ -1,14 +1,14 @@
-package pl.gda.eti.pg.prosite;
+package pl.gda.eti.pg.prosite.pattern;
 
 /**
- * Created by adam on 16.01.16.
+ * Znaleziony łańcuch znaków spełniający schemat podanych reguł.
  */
-public class SequenceFound implements Comparable {
+public class PatternFound implements Comparable {
     private final Integer beginIndex;
     private final Integer endIndex;
     private final String matchedSequence;
 
-    public SequenceFound(int beginIndex, int endIndex, String matchedSequence) {
+    public PatternFound(int beginIndex, int endIndex, String matchedSequence) {
         this.beginIndex = beginIndex;
         this.endIndex = endIndex;
         this.matchedSequence = matchedSequence;
@@ -19,7 +19,7 @@ public class SequenceFound implements Comparable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SequenceFound that = (SequenceFound) o;
+        PatternFound that = (PatternFound) o;
 
         if (!beginIndex.equals(that.beginIndex)) return false;
         if (!endIndex.equals(that.endIndex)) return false;
@@ -42,7 +42,7 @@ public class SequenceFound implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        SequenceFound other = (SequenceFound) o;
+        PatternFound other = (PatternFound) o;
         int beginIndexDiff = this.beginIndex.compareTo(other.beginIndex);
         if (beginIndexDiff != 0) {
             return beginIndexDiff;

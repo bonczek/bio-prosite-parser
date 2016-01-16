@@ -1,4 +1,4 @@
-package pl.gda.eti.pg.prosite;
+package pl.gda.eti.pg.prosite.pattern;
 
 import org.hamcrest.Matcher;
 import org.testng.annotations.Test;

@@ -20,6 +20,9 @@ public class OneOfRule extends Rule {
         }
     }
 
+    /**
+     * Konstruktor slużący do kopiowania reguł
+     */
     public OneOfRule(OneOfRule rule, Rule nextRule) {
         super(rule.index);
         this.permittedCharacters = new HashSet<>(rule.permittedCharacters);

@@ -9,6 +9,9 @@ public class AnythingRule extends Rule {
         this.nextRule = nextRule;
     }
 
+    /**
+     * Konstruktor slużący do kopiowania reguł
+     */
     public AnythingRule(AnythingRule rule, Rule nextRule) {
         super(rule.index);
         this.nextRule = nextRule;
@@ -25,5 +28,4 @@ public class AnythingRule extends Rule {
         return nextRule;
     }
 
-    //@todo czy ograniczać podane znaki do jakiegoś konkretnego zbioru?
 }

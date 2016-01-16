@@ -9,6 +9,9 @@ public class FinalRule extends Rule {
         super(true, index);
     }
 
+    /**
+     * Konstruktor slużący do kopiowania reguł
+     */
     public FinalRule(FinalRule rule) {
         super(true, rule.index);
     }

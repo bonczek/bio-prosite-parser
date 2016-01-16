@@ -5,6 +5,9 @@ package pl.gda.eti.pg.prosite.rule;
  */
 public abstract class Rule {
 
+    /**
+     * Indeks reguły w schemacie - pomocny przy tworzeniu nowego łańcucha reguł dla PatternIterator
+     */
     protected final int index;
     private boolean isFinal = false;
 

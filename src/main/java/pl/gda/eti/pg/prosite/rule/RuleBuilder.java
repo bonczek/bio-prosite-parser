@@ -2,6 +2,10 @@ package pl.gda.eti.pg.prosite.rule;
 
 import java.util.List;
 
+/**
+ * Klasa do budowania nowych łańcuchów reguł według zapamiętanego schematu.
+ * Potrzeba taka wynika z tego, że stan reguł może się zmieniać, przez co każdy PatternIterator potrzebuje nowe obiekty reguł.
+ */
 public class RuleBuilder {
 
     private final List<Rule> rulesChain;
@@ -10,16 +14,29 @@ public class RuleBuilder {
         this.rulesChain = rulesChain;
     }
 
-    public Rule getCopiedRulesChain(int index) {
+    /**
+     * Tworzy kopię reguł zapamiętanych po sparsowaniu od zadanego indeksu reguły.
+     *
+     * @param ruleIndex indeks reguły od której należy odtworzyć dalszy łańcuch reguł
+     * @return nowy łańcuch reguł
+     */
+    public Rule getCopiedRulesChain(int ruleIndex) {
         Rule nextRule = null;
         Rule currentRule = null;
-        for (int i = rulesChain.size() - 1; i >= index; i--) {
+        for (int i = rulesChain.size() - 1; i >= ruleIndex; i--) {
             currentRule = copy(rulesChain.get(i), nextRule);
             nextRule = currentRule;
         }
         return currentRule;
     }
 
+    /**
+     * Tworzy nowe instancje obiektów opierając się na już stworzonych.
+     *
+     * @param rule     reguła do skopiowania
+     * @param nextRule nowa reguła następna w kolejności
+     * @return nowy obiekt skopiowanej reguły.
+     */
     private Rule copy(Rule rule, Rule nextRule) {
         if (rule instanceof FinalRule) {
             return new FinalRule((FinalRule) rule);

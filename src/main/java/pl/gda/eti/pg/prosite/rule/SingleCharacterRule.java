@@ -15,6 +15,9 @@ public class SingleCharacterRule extends Rule {
         this.nextRule = nextRule;
     }
 
+    /**
+     * Konstruktor slużący do kopiowania reguł
+     */
     public SingleCharacterRule(SingleCharacterRule rule, Rule nextRule) {
         super(rule.index);
         this.character = rule.character;

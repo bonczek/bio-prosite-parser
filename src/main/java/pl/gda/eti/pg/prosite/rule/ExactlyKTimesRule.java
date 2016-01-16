@@ -24,6 +24,8 @@ public class ExactlyKTimesRule extends SingleCharacterRule {
      * Jeśli warunek jeszcze nie jest spełniony to reguła zwraca samą siebie ze zmniejszonym licznikiem wystąpień.
      * Po wystąpieniu odpowiednią liczbę razy zwraca kolejną regułę.
      *
+     * Jeśli szukany znak oznaczony jest jako 'x' każdy znak jest przepuszczany, a reguła po prostu służy do określenia liczby wystąpień różnych znaków.
+     *
      * @param c pojedynczy znak, który zostanie sprawdzony przez regułę.
      * @return kolejną regułę, samą siebie lub null
      */
