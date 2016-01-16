@@ -29,7 +29,7 @@ public class ExactlyKTimesRule extends SingleCharacterRule {
      */
     @Override
     public Rule next(char c) {
-        if (Character.compare(c, character) == 0) {
+        if (Character.compare(c, character) == 0 || Character.compare('x', character) == 0) {
             counter++;
             if (counter < repeatNumber) {
                 return this;

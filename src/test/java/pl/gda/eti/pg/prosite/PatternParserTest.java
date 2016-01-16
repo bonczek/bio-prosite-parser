@@ -3,6 +3,7 @@ package pl.gda.eti.pg.prosite;
 import org.hamcrest.Matcher;
 import org.testng.annotations.Test;
 import pl.gda.eti.pg.prosite.rule.BetweenKAndJRule;
+import pl.gda.eti.pg.prosite.rule.FinalRule;
 import pl.gda.eti.pg.prosite.rule.Rule;
 import pl.gda.eti.pg.prosite.rule.SingleCharacterRule;
 
@@ -84,7 +85,7 @@ public class PatternParserTest {
 
     @Test
     public void testExactlyKTimes() throws Exception {
-        String pattern = "A(2)-B(3)";
+        String pattern = "A(2)-B(3)-x(3)";
         List<Rule> rulesChain = patternParser.parse(pattern);
 
         Rule s1 = rulesChain.get(0).next('A');
@@ -94,12 +95,15 @@ public class PatternParserTest {
         Rule s4 = s3.next('B');
         assertThat(s3.next('Z'), nullValue());
         Rule s5 = s4.next('B');
-        assertThat(s5.isFinal(), is(true));
+        Rule s6 = s5.next('J');
+        Rule s7 = s6.next('U');
+        Rule s8 = s7.next('X');
+        assertThat(s8.isFinal(), is(true));
     }
 
     @Test
     public void testBetweenKAndJ() throws Exception {
-        String pattern = "e(2,3)-e";
+        String pattern = "e(2,3)-e-x(2,3)";
         List<Rule> rulesChain = patternParser.parse(pattern);
 
         BetweenKAndJRule r1 = (BetweenKAndJRule) rulesChain.get(0).next('e');
@@ -109,6 +113,14 @@ public class PatternParserTest {
         assertThat(r2.getRuleAfter() instanceof SingleCharacterRule, is(true));
         Rule r3 = r2.next('e');
         assertThat(r3 instanceof SingleCharacterRule, is(true));
+        Rule r4 = r3.next('e');
+        Rule r5 = r4.next('I');
+        BetweenKAndJRule r6 = (BetweenKAndJRule) r4.next('Z');
+        assertThat(r6.getRuleAfter(), notNullValue());
+        assertThat(r6.getRuleAfter() instanceof FinalRule, is(true));
+        Rule r7 = r5.next('T');
+        assertThat(r7, notNullValue());
+        assertThat(r7 instanceof FinalRule, is(true));
     }
 
     private void assertNextValues(Rule rule, List<Character> chars, Matcher<Object> matcher) {
