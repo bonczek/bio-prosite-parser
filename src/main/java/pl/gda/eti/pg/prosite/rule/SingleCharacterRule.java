@@ -9,8 +9,15 @@ public class SingleCharacterRule extends Rule {
 
     protected final Rule nextRule;
 
-    public SingleCharacterRule(Character character, Rule nextRule) {
+    public SingleCharacterRule(Character character, Rule nextRule, int index) {
+        super(index);
         this.character = character;
+        this.nextRule = nextRule;
+    }
+
+    public SingleCharacterRule(SingleCharacterRule rule, Rule nextRule) {
+        super(rule.index);
+        this.character = rule.character;
         this.nextRule = nextRule;
     }
 

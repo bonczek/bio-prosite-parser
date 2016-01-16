@@ -9,13 +9,21 @@ public class OneOfRule extends Rule {
     /**
      * Zbiór znaków dozwolonych w tym miejscu schematu.
      */
-    private Set<Character> permittedCharacters = new HashSet<>();
+    private Set<Character> permittedCharacters;
 
-    public OneOfRule(char[] chars, Rule nextRule) {
+    public OneOfRule(char[] chars, Rule nextRule, int index) {
+        super(index);
         this.nextRule = nextRule;
+        this.permittedCharacters = new HashSet<>();
         for (char c : chars) {
             permittedCharacters.add(c);
         }
+    }
+
+    public OneOfRule(OneOfRule rule, Rule nextRule) {
+        super(rule.index);
+        this.permittedCharacters = new HashSet<>(rule.permittedCharacters);
+        this.nextRule = nextRule;
     }
 
     /**

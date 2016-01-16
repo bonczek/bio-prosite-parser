@@ -5,13 +5,20 @@ package pl.gda.eti.pg.prosite.rule;
  */
 public abstract class Rule {
 
+    protected final int index;
     private boolean isFinal = false;
 
-    public Rule() {
+    public Rule(int index) {
+        this.index = index;
     }
 
-    public Rule(boolean isFinal) {
+    public Rule(boolean isFinal, int index) {
         this.isFinal = isFinal;
+        this.index = index;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     /**

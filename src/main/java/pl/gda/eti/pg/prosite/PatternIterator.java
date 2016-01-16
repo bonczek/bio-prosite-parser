@@ -24,10 +24,10 @@ public class PatternIterator {
         this.matched = new StringBuilder();
     }
 
-    public PatternIterator(PatternIterator iterator) {
+    public PatternIterator(PatternIterator iterator, Rule nextRule) {
         this.index = iterator.index;
-        this.rule = iterator.rule;
         this.matched = new StringBuilder(iterator.matched);
+        this.rule = nextRule;
     }
 
     public Rule getSecondRule() {
@@ -63,6 +63,6 @@ public class PatternIterator {
     }
 
     public String finishedReport() {
-        return String.format("Znaleziony wzorzec: %s indeks: (%d,%d)\n", matched.toString(), index, index + matched.length());
+        return String.format("Znaleziony wzorzec: %s indeks: (%d,%d)", matched.toString(), index, index + matched.length());
     }
 }

@@ -5,8 +5,12 @@ package pl.gda.eti.pg.prosite.rule;
  */
 public class FinalRule extends Rule {
 
-    public FinalRule() {
-        super(true);
+    public FinalRule(int index) {
+        super(true, index);
+    }
+
+    public FinalRule(FinalRule rule) {
+        super(true, rule.index);
     }
 
     @Override

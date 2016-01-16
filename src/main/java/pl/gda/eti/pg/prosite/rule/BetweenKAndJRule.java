@@ -6,14 +6,20 @@ public class BetweenKAndJRule extends SingleCharacterRule {
 
     private int maxRepeatNumber;
 
-    private int counter;
+    private int counter = 0;
 
     private boolean conditionPassed = false;
 
-    public BetweenKAndJRule(Character character, Rule nextRule, int minRepeatNumber, int maxRepeatNumber) {
-        super(character, nextRule);
+    public BetweenKAndJRule(Character character, Rule nextRule, int minRepeatNumber, int maxRepeatNumber, int index) {
+        super(character, nextRule, index);
         this.minRepeatNumber = minRepeatNumber;
         this.maxRepeatNumber = maxRepeatNumber;
+    }
+
+    public BetweenKAndJRule(BetweenKAndJRule rule, Rule nextRule) {
+        super(rule.character, nextRule, rule.index);
+        this.minRepeatNumber = rule.minRepeatNumber;
+        this.maxRepeatNumber = rule.maxRepeatNumber;
     }
 
     public Rule getRuleAfter() {
@@ -27,14 +33,13 @@ public class BetweenKAndJRule extends SingleCharacterRule {
     @Override
     public Rule next(char c) {
         if (Character.compare(c, character) == 0) {
-            minRepeatNumber--;
-            maxRepeatNumber--;
-            if (minRepeatNumber > 0) {
+            counter++;
+            if (counter < minRepeatNumber) {
                 return this;
-            } else if (minRepeatNumber <= 0 && maxRepeatNumber > 0) {
+            } else if (counter >= minRepeatNumber && counter < maxRepeatNumber) {
                 conditionPassed = true;
                 return this;
-            } else if (maxRepeatNumber == 0) {
+            } else if (counter == maxRepeatNumber) {
                 return nextRule;
             } else {
                 conditionPassed = false;

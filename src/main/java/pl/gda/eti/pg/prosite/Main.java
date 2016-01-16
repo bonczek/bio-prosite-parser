@@ -1,6 +1,7 @@
 package pl.gda.eti.pg.prosite;
 
 import pl.gda.eti.pg.prosite.rule.Rule;
+import pl.gda.eti.pg.prosite.rule.RuleBuilder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,7 +15,8 @@ public class Main {
         String noisyPattern = "e(2,5)-e(2,4)-e";
         PatternParser patternParser = new PatternParser();
 
-        Rule rulesChain = patternParser.parse(noisyPattern);
+        List<Rule> rulesChain = patternParser.parse(noisyPattern);
+        RuleBuilder ruleBuilder = new RuleBuilder(rulesChain);
 
         String lectureString1 = "SRSLKMRGQAFVIFKEVSSAT";
         String lectureString2 = "KLTGRPRGVAFVRYNKREEAQ";
@@ -22,7 +24,7 @@ public class Main {
 
         String noisyString = "eeeeeeeeeeeeeee";
 
-        matchSingleSequence(noisyString, rulesChain);
+        matchSingleSequence(noisyString, ruleBuilder);
 //        matchSingleSequence(lectureString1, rulesChain);
 //        matchSingleSequence(lectureString2, rulesChain);
 //        matchSingleSequence(lectureString3, rulesChain);
@@ -34,13 +36,13 @@ public class Main {
      * który istnieje do czasu, gdy wzorzec jest spełniony rozpoczynając od rozpoczętego indeksu.
      *
      * @param sequence   sekwencja do przeszukania
-     * @param rulesChain łańcuch kolejnych reguł, które sekwencja musi spełnić
+     * @param rulesBuilder łańcuch kolejnych reguł, które sekwencja musi spełnić
      */
-    private static void matchSingleSequence(String sequence, Rule rulesChain) {
+    private static void matchSingleSequence(String sequence, RuleBuilder rulesBuilder) {
         List<PatternIterator> patternIterators = new ArrayList<>();
         for (int i = 0; i < sequence.length(); i++) {
-            patternIterators.add(new PatternIterator(i, rulesChain));
-            checkIteratorsAtPosition(sequence.charAt(i), patternIterators);
+            patternIterators.add(new PatternIterator(i, rulesBuilder.getCopiedRulesChain(0)));
+            checkIteratorsAtPosition(sequence.charAt(i), patternIterators, rulesBuilder);
         }
     }
 
@@ -53,7 +55,7 @@ public class Main {
      * @param seqCharacter kolejny znak przetwarzanej sekwencji
      * @param it           iterator do kolekcji przejść wzorców.
      */
-    private static void checkIteratorsAtPosition(char seqCharacter, List<PatternIterator> patternIterators) {
+    private static void checkIteratorsAtPosition(char seqCharacter, List<PatternIterator> patternIterators, RuleBuilder ruleBuilder) {
         Iterator<PatternIterator> it = patternIterators.iterator();
         List<PatternIterator> toAdd = new ArrayList<>();
         while (it.hasNext()) {
@@ -62,7 +64,8 @@ public class Main {
                 it.remove();
             } else {
                 if (patternIterator.getSecondRule() != null) {
-                    toAdd.add(new PatternIterator(patternIterator));
+                    int ruleIndex = patternIterator.getSecondRule().getIndex();
+                    toAdd.add(new PatternIterator(patternIterator, ruleBuilder.getCopiedRulesChain(ruleIndex)));
                 }
                 if (patternIterator.finished()) {
                     System.out.println(patternIterator.finishedReport());

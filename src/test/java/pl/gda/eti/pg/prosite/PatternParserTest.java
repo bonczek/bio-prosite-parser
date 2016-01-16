@@ -21,13 +21,13 @@ public class PatternParserTest {
     @Test
     public void testParseOneOfRule() throws Exception {
         String pattern = "[ABC]-[DEF]-[GHI]";
-        Rule res = patternParser.parse(pattern);
+        List<Rule> rulesChain = patternParser.parse(pattern);
 
-        assertThat(res, notNullValue());
-        assertThat(res.isFinal(), is(false));
-        assertNextValues(res, Arrays.asList('A', 'B', 'C'), notNullValue());
+        assertThat(rulesChain.size(), is(4));
+        assertThat(rulesChain.get(0).isFinal(), is(false));
+        assertNextValues(rulesChain.get(0), Arrays.asList('A', 'B', 'C'), notNullValue());
 
-        Rule secondRule = res.next('A');
+        Rule secondRule = rulesChain.get(0).next('A');
         assertNextValues(secondRule, Arrays.asList('D', 'E', 'F'), notNullValue());
 
         Rule thirdRule = secondRule.next('D');
@@ -38,14 +38,14 @@ public class PatternParserTest {
     @Test
     public void testParseNoneOf() throws Exception {
         String pattern = "{ABC}-{DEF}";
-        Rule res = patternParser.parse(pattern);
+        List<Rule> rulesChain = patternParser.parse(pattern);
 
-        assertThat(res, notNullValue());
-        assertThat(res.isFinal(), is(false));
+        assertThat(rulesChain.size(), is(3));
+        assertThat(rulesChain.get(0).isFinal(), is(false));
 
-        assertNextValues(res, Arrays.asList('A', 'B', 'C'), nullValue());
+        assertNextValues(rulesChain.get(0), Arrays.asList('A', 'B', 'C'), nullValue());
 
-        Rule secondRule = res.next('D');
+        Rule secondRule = rulesChain.get(0).next('D');
         assertThat(secondRule, notNullValue());
         assertNextValues(secondRule, Arrays.asList('D', 'E', 'F'), nullValue());
 
@@ -56,10 +56,10 @@ public class PatternParserTest {
     @Test
     public void testParseAnything() throws Exception {
         String pattern = "x-x";
-        Rule res = patternParser.parse(pattern);
+        List<Rule> rulesChain = patternParser.parse(pattern);
 
-        assertThat(res, notNullValue());
-        Rule secondRule = res.next('F');
+        assertThat(rulesChain.size(), is(3));
+        Rule secondRule = rulesChain.get(0).next('F');
         assertThat(secondRule, notNullValue());
         Rule thirdRule = secondRule.next('Z');
         assertThat(thirdRule, notNullValue());
@@ -69,11 +69,11 @@ public class PatternParserTest {
     @Test
     public void testParseSingleCharacter() throws Exception {
         String pattern = "F-G-H";
-        Rule rule = patternParser.parse(pattern);
+        List<Rule> rulesChain = patternParser.parse(pattern);
 
-        assertThat(rule, notNullValue());
-        assertThat(rule.next('X'), nullValue());
-        Rule secondRule = rule.next('F');
+        assertThat(rulesChain.size(), is(4));
+        assertThat(rulesChain.get(0).next('X'), nullValue());
+        Rule secondRule = rulesChain.get(0).next('F');
         assertThat(secondRule, notNullValue());
         Rule thirdRule = secondRule.next('G');
         assertThat(thirdRule, notNullValue());
@@ -85,9 +85,9 @@ public class PatternParserTest {
     @Test
     public void testExactlyKTimes() throws Exception {
         String pattern = "A(2)-B(3)";
-        Rule rule = patternParser.parse(pattern);
+        List<Rule> rulesChain = patternParser.parse(pattern);
 
-        Rule s1 = rule.next('A');
+        Rule s1 = rulesChain.get(0).next('A');
         assertThat(s1.next('x'), nullValue());
         Rule s2 = s1.next('A');
         Rule s3 = s2.next('B');
@@ -100,9 +100,9 @@ public class PatternParserTest {
     @Test
     public void testBetweenKAndJ() throws Exception {
         String pattern = "e(2,3)-e";
-        Rule rule = patternParser.parse(pattern);
+        List<Rule> rulesChain = patternParser.parse(pattern);
 
-        BetweenKAndJRule r1 = (BetweenKAndJRule) rule.next('e');
+        BetweenKAndJRule r1 = (BetweenKAndJRule) rulesChain.get(0).next('e');
         assertThat(r1.getRuleAfter(), nullValue());
         BetweenKAndJRule r2 = (BetweenKAndJRule) r1.next('e');
         assertThat(r2.getRuleAfter(), notNullValue());

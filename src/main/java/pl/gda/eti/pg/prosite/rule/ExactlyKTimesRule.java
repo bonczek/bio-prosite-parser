@@ -7,9 +7,16 @@ public class ExactlyKTimesRule extends SingleCharacterRule {
      */
     private int repeatNumber;
 
-    public ExactlyKTimesRule(Character character, Rule nextRule, int repeatNumer) {
-        super(character, nextRule);
+    private int counter = 0;
+
+    public ExactlyKTimesRule(Character character, Rule nextRule, int repeatNumer, int index) {
+        super(character, nextRule, index);
         this.repeatNumber = repeatNumer;
+    }
+
+    public ExactlyKTimesRule(ExactlyKTimesRule rule, Rule nextRule) {
+        super(rule.character, nextRule, rule.index);
+        this.repeatNumber = rule.repeatNumber;
     }
 
     /**
@@ -23,8 +30,8 @@ public class ExactlyKTimesRule extends SingleCharacterRule {
     @Override
     public Rule next(char c) {
         if (Character.compare(c, character) == 0) {
-            repeatNumber--;
-            if (repeatNumber > 0) {
+            counter++;
+            if (counter < repeatNumber) {
                 return this;
             } else {
                 return nextRule;

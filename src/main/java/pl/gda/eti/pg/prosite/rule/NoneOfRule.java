@@ -10,13 +10,21 @@ public class NoneOfRule extends Rule {
     /**
      * Zbiór znaków zabronionych w tym miejscu schematu.
      */
-    private Set<Character> excludedCharactersSet = new HashSet<>();
+    private Set<Character> excludedCharactersSet;
 
-    public NoneOfRule(char[] excludedCharacters, Rule nextRule) {
+    public NoneOfRule(char[] excludedCharacters, Rule nextRule, int index) {
+        super(index);
         this.nextRule = nextRule;
+        this.excludedCharactersSet = new HashSet<>();
         for (char c : excludedCharacters) {
             excludedCharactersSet.add(c);
         }
+    }
+
+    public NoneOfRule(NoneOfRule rule, Rule nextRule) {
+        super(rule.index);
+        this.nextRule = nextRule;
+        this.excludedCharactersSet = new HashSet<>(rule.excludedCharactersSet);
     }
 
     /**

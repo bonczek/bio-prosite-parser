@@ -4,7 +4,13 @@ public class AnythingRule extends Rule {
 
     private final Rule nextRule;
 
-    public AnythingRule(Rule nextRule) {
+    public AnythingRule(Rule nextRule, int index) {
+        super(index);
+        this.nextRule = nextRule;
+    }
+
+    public AnythingRule(AnythingRule rule, Rule nextRule) {
+        super(rule.index);
         this.nextRule = nextRule;
     }
 
