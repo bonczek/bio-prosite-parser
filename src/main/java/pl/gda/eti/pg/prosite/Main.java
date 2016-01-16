@@ -4,30 +4,36 @@ import pl.gda.eti.pg.prosite.rule.Rule;
 import pl.gda.eti.pg.prosite.rule.RuleBuilder;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        String pattern = "[RK]-G-{EDRKHPCG}-[AGSCI]-[FY]-[LIVA]-x-[FYM]";
-        String noisyPattern = "e(2,5)-e(2,4)-e";
+        if (args.length != 2) {
+            switch (args.length) {
+                case (0):
+                    System.out.println("Nie podałeś żadnego parametru: pierwszy parametr do wzorzec, a drugi to sekwencja do przeszukania");
+                    return;
+                case (1):
+                    System.out.println("Podałeś tylko pierwszy parametr, wymagane są dwa: pierwszy parametr do wzorzec, a drugi to sekwencja do przeszukania");
+                    return;
+                default:
+                    System.out.println("Podałeś za dużo parametrów, wymagane są dwa: pierwszy parametr do wzorzec, a drugi to sekwencja do przeszukania");
+                    return;
+            }
+        }
+        String pattern = args[0];
+        String sequence = args[1];
+
         PatternParser patternParser = new PatternParser();
-
-        List<Rule> rulesChain = patternParser.parse(noisyPattern);
+        List<Rule> rulesChain = patternParser.parse(pattern);
         RuleBuilder ruleBuilder = new RuleBuilder(rulesChain);
-
-        String lectureString1 = "SRSLKMRGQAFVIFKEVSSAT";
-        String lectureString2 = "KLTGRPRGVAFVRYNKREEAQ";
-        String lectureString3 = "VGCSVHKGFAFVQYVNERNAR";
-
-        String noisyString = "eeeeeeeeeeeeeee";
-
-        matchSingleSequence(noisyString, ruleBuilder);
-//        matchSingleSequence(lectureString1, rulesChain);
-//        matchSingleSequence(lectureString2, rulesChain);
-//        matchSingleSequence(lectureString3, rulesChain);
+        Set<SequenceFound> results = matchSingleSequence(sequence, ruleBuilder);
+        results.stream().sorted((a, b) -> a.compareTo(b)).forEach(s -> System.out.println(s.report()));
     }
 
     /**
@@ -38,12 +44,14 @@ public class Main {
      * @param sequence   sekwencja do przeszukania
      * @param rulesBuilder łańcuch kolejnych reguł, które sekwencja musi spełnić
      */
-    private static void matchSingleSequence(String sequence, RuleBuilder rulesBuilder) {
+    private static Set<SequenceFound> matchSingleSequence(String sequence, RuleBuilder rulesBuilder) {
+        Set<SequenceFound> results = new HashSet<>();
         List<PatternIterator> patternIterators = new ArrayList<>();
         for (int i = 0; i < sequence.length(); i++) {
             patternIterators.add(new PatternIterator(i, rulesBuilder.getCopiedRulesChain(0)));
-            checkIteratorsAtPosition(sequence.charAt(i), patternIterators, rulesBuilder);
+            checkIteratorsAtPosition(sequence.charAt(i), patternIterators, rulesBuilder, results);
         }
+        return results;
     }
 
     /**
@@ -55,7 +63,7 @@ public class Main {
      * @param seqCharacter kolejny znak przetwarzanej sekwencji
      * @param it           iterator do kolekcji przejść wzorców.
      */
-    private static void checkIteratorsAtPosition(char seqCharacter, List<PatternIterator> patternIterators, RuleBuilder ruleBuilder) {
+    private static void checkIteratorsAtPosition(char seqCharacter, List<PatternIterator> patternIterators, RuleBuilder ruleBuilder, Set<SequenceFound> results) {
         Iterator<PatternIterator> it = patternIterators.iterator();
         List<PatternIterator> toAdd = new ArrayList<>();
         while (it.hasNext()) {
@@ -68,7 +76,8 @@ public class Main {
                     toAdd.add(new PatternIterator(patternIterator, ruleBuilder.getCopiedRulesChain(ruleIndex)));
                 }
                 if (patternIterator.finished()) {
-                    System.out.println(patternIterator.finishedReport());
+                    //System.out.println(patternIterator.finishedReport());
+                    results.add(patternIterator.getSequenceFound());
                 }
             }
         }

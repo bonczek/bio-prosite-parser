@@ -62,7 +62,8 @@ public class PatternIterator {
         return rule.isFinal();
     }
 
-    public String finishedReport() {
-        return String.format("Znaleziony wzorzec: %s indeks: (%d,%d)", matched.toString(), index, index + matched.length());
+    public SequenceFound getSequenceFound() {
+        //@todo co jesli nie skonczy?
+        return new SequenceFound(index, index + matched.length(), matched.toString());
     }
 }
